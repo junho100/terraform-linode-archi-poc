@@ -1,5 +1,5 @@
 resource "linode_firewall" "bastion_host_firewall" {
-  label = format(module.naming.result, "bh-firewall")
+  label = format(module.naming.result, "bastion-fw")
 
   inbound {
     label    = "allow-ssh"
@@ -18,7 +18,7 @@ resource "linode_firewall" "bastion_host_firewall" {
 }
 
 resource "linode_firewall" "backend_firewall" {
-  label = format(module.naming.result, "back-firewall")
+  label = format(module.naming.result, "backend-fw")
 
   inbound {
     label    = "allow-ssh"
@@ -33,4 +33,32 @@ resource "linode_firewall" "backend_firewall" {
   outbound_policy = "ACCEPT"
 
   linodes = [linode_instance.backend.id]
+}
+
+resource "linode_firewall" "nb_fw" {
+  label = format(module.naming.result, "nb-fw")
+
+  inbound {
+    label    = "allow-ssh"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "80"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
+    label    = "allow-ssh"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "443"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound_policy = "DROP"
+
+  outbound_policy = "ACCEPT"
+
+  nodebalancers = [linode_nodebalancer.backend_nb.id]
 }
