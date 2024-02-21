@@ -6,3 +6,10 @@ resource "linode_stackscript" "install_docker_mysql" {
   })
   images = ["linode/ubuntu22.04"]
 }
+
+resource "linode_stackscript" "install_docker" {
+  label       = format(module.naming.result, "docker-stackscript")
+  description = "install docker"
+  script      = file("./files/install-docker.sh")
+  images      = ["linode/ubuntu22.04"]
+}

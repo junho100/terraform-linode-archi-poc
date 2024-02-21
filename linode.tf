@@ -33,6 +33,8 @@ resource "linode_instance" "backend" {
   }
 
   private_ip = true
+
+  stackscript_id = linode_stackscript.install_docker.id
 }
 
 resource "linode_instance" "database" {
