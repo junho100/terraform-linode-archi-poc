@@ -24,3 +24,8 @@ variable "instance_password" {
   description = "password for the instance"
   type        = string
 }
+
+variable "database_password" {
+  description = "password for the database"
+  type        = string
+}

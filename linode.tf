@@ -34,3 +34,24 @@ resource "linode_instance" "backend" {
 
   private_ip = true
 }
+
+resource "linode_instance" "database" {
+  label     = format(module.naming.result, "database")
+  image     = "linode/ubuntu22.04"
+  region    = "jp-osa"
+  type      = "g6-standard-2"
+  root_pass = var.instance_password
+
+  interface {
+    purpose = "public"
+  }
+
+  interface {
+    purpose   = "vpc"
+    subnet_id = linode_vpc_subnet.database_subnet[0].id
+  }
+
+  private_ip = true
+
+  stackscript_id = linode_stackscript.install_docker_mysql.id
+}
