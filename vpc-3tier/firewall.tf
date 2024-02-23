@@ -28,47 +28,11 @@ resource "linode_firewall" "backend_firewall" {
     ipv4     = ["${linode_instance.bastion_host.ip_address}/32"]
   }
 
-  inbound {
-    label    = "allow-nb-traffic"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "3000"
-    ipv4     = ["${linode_nodebalancer.backend_nb.ipv4}/32"]
-  }
-
   inbound_policy = "DROP"
 
   outbound_policy = "ACCEPT"
 
   linodes = [linode_instance.backend.id]
-}
-
-resource "linode_firewall" "nb_fw" {
-  label = format(module.naming.result, "nb-fw")
-
-  inbound {
-    label    = "allow-http"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "80"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-https"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "443"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound_policy = "DROP"
-
-  outbound_policy = "ACCEPT"
-
-  nodebalancers = [linode_nodebalancer.backend_nb.id]
 }
 
 resource "linode_firewall" "database_firewall" {
