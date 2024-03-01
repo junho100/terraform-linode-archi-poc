@@ -1,5 +1,5 @@
 resource "linode_instance" "nginx" {
-  label     = "nginx"
+  label     = format(module.naming.result, "linode-1")
   image     = "linode/ubuntu22.04"
   region    = "jp-osa"
   type      = "g6-standard-1"
@@ -11,7 +11,7 @@ resource "linode_instance" "nginx" {
 }
 
 resource "linode_instance" "apache" {
-  label     = "apache"
+  label     = format(module.naming.result, "linode-2")
   image     = "linode/ubuntu22.04"
   region    = "jp-osa"
   type      = "g6-standard-1"

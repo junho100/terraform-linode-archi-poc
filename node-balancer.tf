@@ -1,5 +1,5 @@
 resource "linode_nodebalancer" "backend_nb" {
-  label  = "backend-nb"
+  label  = format(module.naming.result, "backend-nb")
   region = "jp-osa"
 }
 
@@ -16,7 +16,7 @@ resource "linode_nodebalancer_node" "nginx_nb_node" {
   nodebalancer_id = linode_nodebalancer.backend_nb.id
   config_id       = linode_nodebalancer_config.backend_nb_config.id
   address         = "${linode_instance.nginx.private_ip_address}:3000"
-  label           = "nginx-node"
+  label           = format(module.naming.result, "nb-node-1")
 
   lifecycle {
     // Tell Terraform to implicitly recreate the NodeBalancer node when
@@ -30,7 +30,7 @@ resource "linode_nodebalancer_node" "apache_nb_node" {
   nodebalancer_id = linode_nodebalancer.backend_nb.id
   config_id       = linode_nodebalancer_config.backend_nb_config.id
   address         = "${linode_instance.apache.private_ip_address}:3000"
-  label           = "apache-node"
+  label           = format(module.naming.result, "nb-node-2")
 
   lifecycle {
     // Tell Terraform to implicitly recreate the NodeBalancer node when
