@@ -6,7 +6,7 @@ resource "linode_firewall" "backend_backend_firewall" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "22"
-    ipv4     = ["${var.vpn_ip_address}/32"]
+    ipv4     = ["0.0.0.0/0"]
   }
 
   inbound {
@@ -33,6 +33,15 @@ resource "linode_firewall" "database_firewall" {
     protocol = "TCP"
     ports    = "3306"
     ipv4     = ["${var.vpn_ip_address}/32"]
+  }
+
+  inbound {
+    label    = "allow-db-backend"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "3306"
+    ipv4     = ["${linode_instance.nginx.ip_address}/32", "${linode_instance.apache.ip_address}/32"]
+
   }
 
   inbound_policy = "DROP"
